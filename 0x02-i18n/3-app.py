@@ -21,12 +21,20 @@ app.config.from_object(Config)
 babel = Babel(app)
 
 
+@babel.localeselector
+def get_locale() -> str:
+    """
+    Returns the best matched locale as per languages config
+    """
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
 @app.route('/')
 def hello_world():
     """
     Handles root request
     """
-    return render_template('1-index.html')
+    return render_template('3-index.html')
 
 
 if __name__ == '__main__':
