@@ -31,7 +31,7 @@ class Config:
     """
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
-    BABEL_DEFAULT_TIMEZONE = 'utc'
+    BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
 app = Flask(__name__)
@@ -40,7 +40,10 @@ babel = Babel(app)
 
 
 @app.before_request
-def before_request():
+def before_request() -> None:
+    """
+    sets user to global variable
+    """
     g.user = get_user()
 
 
