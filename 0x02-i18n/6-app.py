@@ -31,16 +31,20 @@ class Config:
     """
     LANGUAGES = ['en', 'fr']
     BABEL_DEFAULT_LOCALE = 'en'
-    BABEL_DEFAULT_TIMEZONE = 'utc'
+    BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.url_map.strict_slashes = False
 babel = Babel(app)
 
 
 @app.before_request
-def before_request():
+def before_request() -> None:
+    """
+    Set user dictionary to global g
+    """
     g.user = get_user()
 
 
@@ -55,6 +59,10 @@ def get_locale() -> str:
             return locale
     if g.user and g.user['locale'] in app.config['LANGUAGES']:
         return g.user['locale']
+    header_locale = request.headers.get('locale', '')
+    if header_locale in app.config["LANGUAGES"]:
+        return header_locale
+
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
